@@ -98,7 +98,7 @@ function createBubbleChart(year, data) {
     //widVal.push(filteredData[i].properties.inj);
 
     //console.log(filteredData[i].properties.inj);
-    markSize.push(filteredData[i].properties.inj);
+    markSize.push(Math.log(filteredData[i].properties.inj)*10);
     
     magVal.push(filteredData[i].properties.mag*10);
 
@@ -106,7 +106,6 @@ function createBubbleChart(year, data) {
     cityLon.push(filteredData[i].properties.slon);
   }
 
-  console.log(magVal)
   /*
   console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
   console.log(lenVal);
@@ -126,7 +125,7 @@ function createBubbleChart(year, data) {
     hoverinfo: 'text',
     text: hoverText,
     marker: {
-        size: magVal,
+        size: markSize,
         line: {
             color: 'black',
             width: 2
