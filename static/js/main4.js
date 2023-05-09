@@ -17,43 +17,43 @@ d3.json(sample)
 function createDropDown(data) {
   var features = data.features;
 
-  // Access the "st" values and remove duplicates
-  var stValues = [...new Set(features.map(feature => feature.properties.st))];
+  // Access the "yr" values and remove duplicates
+  var yrValues = [...new Set(features.map(feature => feature.properties.yr))];
 
-  // Sort the "st" values in ascending order
-  stValues.sort(function(a, b) {
+  // Sort the "yr" values in ascending order
+  yrValues.sort(function(a, b) {
     return d3.ascending(a, b);
   });
 
   // Create the dropdown options
-  d3.select("#states")
+  d3.select("#years")
     .selectAll("option")
-    .data(stValues)
+    .data(yrValues)
     .enter()
     .append("option")
     .text(function(d) {
       return d;
     })
     .on("change", function() {
-      var selectedState = d3.select(this).property("value");
-      createBubbleChart(selectedState, data);
+      var year = d3.select(this).property("value");
+      createBubbleChart(year, data);
     });
 
   // Call function createBubbleChart with the initial selected state
-  createBubbleChart(stValues[0], data);
+  createBubbleChart(yrValues[0], data);
   
 }
 
-function optionChanged(state)
+function optionChanged(year)
 {
-    console.log("change state to " + state);
+    console.log("change year to " + year);
 
     d3.json(sample)
     .then(function(data) {
       console.log(data);
     
       // call creteBubbleChart passing it state and data
-    createBubbleChart(state, data);
+    createBubbleChart(year, data);
 
     })
     .catch(function(error) {
@@ -63,19 +63,19 @@ function optionChanged(state)
 }
 
 
-function createBubbleChart(selectedState, data) {
+function createBubbleChart(year, data) {
 
-    console.log(data);
+    //console.log(data);
     
-    console.log(selectedState);
+    console.log(year);
 
    // alert("createBubbleChart called with state =  " + selectedState);
 
   // Filter the data based on the selected state
   // let value =     data.samples.filter(result => result.id == subjectID);  this is from previous project
-  var filteredData = data.features.filter(feature => feature.properties.st === selectedState);
+  var filteredData = data.features.filter(feature => feature.properties.yr == year);
 
-    console.log(filteredData.length);
+    //console.log(filteredData.length);
     console.log(filteredData);
   //console.log(filteredData[0].properties.mag);
 
@@ -95,26 +95,24 @@ function createBubbleChart(selectedState, data) {
     lenVal.push(filteredData[i].properties.mag);
 
     //console.log(filteredData[i].properties.slon);
-    widVal.push(filteredData[i].properties.inj);
+    //widVal.push(filteredData[i].properties.inj);
 
     //console.log(filteredData[i].properties.inj);
-    markSize.push(filteredData[i].properties.inj);
+    markSize.push(Math.log(filteredData[i].properties.inj)*10);
     
-    magVal.push(filteredData[i].properties.mag);
+    magVal.push(filteredData[i].properties.mag*10);
 
     cityLat.push(filteredData[i].properties.slat);
     cityLon.push(filteredData[i].properties.slon);
-
-
-
-
   }
+
+  /*
   console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
   console.log(lenVal);
   console.log(widVal);
   console.log(markSize);
   console.log(magVal);
-  
+  */
 
   
 
@@ -137,7 +135,7 @@ function createBubbleChart(selectedState, data) {
 
 
 var layout = {
-  title: 'Tornado in the USA',
+  title: 'Tornados in the USA',
   showlegend: false,
   geo: {
       scope: 'usa',
