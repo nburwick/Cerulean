@@ -1,26 +1,22 @@
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
-  <title>Victoria's sandbox page</title>
- 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Leaflet Step-1</title>
+
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
     integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
     crossorigin="" />
 
-  <!-- Our CSS -->
-  <link rel="stylesheet" type="text/css" href="static/css/style.css">
 </head>
 
 <body>
 
-  <div class="dropdowns">
-    <h5>Use starting or ending coordinates?</h5>
-    <select id="coordOptions" onchange="optionChanged(this.value)"></select> <br>
-    <h5>Show tornados with magnitude </h5>
-    <select id="moreorlessOptions" onchange="optionChanged(this.value)"></select>
-    <select id="magOptions" onchange="optionChanged(this.value)"></select> <br>
-  </div>
+  <!-- The div that holds our map -->
   <div id="map"></div>
 
   <!-- Leaflet JS -->
@@ -30,8 +26,7 @@
   <!-- D3 JavaScript -->
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <!-- Our JavaScript -->
-  <script type="text/javascript" src="static/js/magnitude_bubble.js"></script>
-  
+  <script type="text/javascript" src="magnitudeBubble.js"></script>
 </body>
 
 </html>
