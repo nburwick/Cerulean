@@ -100,9 +100,9 @@ function createBubbleChart(year, data) {
     //console.log(filteredData[i].properties.inj);
     markSize.push(Math.log(filteredData[i].properties.inj)*10); // normalize those injury numbers a little bit
     
-    magVal.push(filteredData[i].properties.mag*10);
+    magVal.push(filteredData[i].properties.mag*10); // normalize 
 
-    cityLat.push(filteredData[i].properties.slat);
+    cityLat.push(filteredData[i].properties.slat); // we're using starting coordinates instead of ending coordinates currently
     cityLon.push(filteredData[i].properties.slon);
 
     displayText = ``
