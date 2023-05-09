@@ -80,7 +80,7 @@ function createBubbleChart(year, data) {
   //console.log(filteredData[0].properties.mag);
 
   let lenVal = [];   //magnitude value
-  let widVal = [];   //injuriesvalue
+  //let widVal = [];   //injuriesvalue
   let magVal = [];   // magnitude
   let markSize = []; // injuries
 
@@ -98,12 +98,15 @@ function createBubbleChart(year, data) {
     //widVal.push(filteredData[i].properties.inj);
 
     //console.log(filteredData[i].properties.inj);
-    markSize.push(Math.log(filteredData[i].properties.inj)*10);
+    markSize.push(Math.log(filteredData[i].properties.inj)*10); // normalize those injury numbers a little bit
     
     magVal.push(filteredData[i].properties.mag*10);
 
     cityLat.push(filteredData[i].properties.slat);
     cityLon.push(filteredData[i].properties.slon);
+
+    displayText = ``
+    hoverText.push()
   }
 
   /*
@@ -125,7 +128,7 @@ function createBubbleChart(year, data) {
     hoverinfo: 'text',
     text: hoverText,
     marker: {
-        size: markSize,
+        size: markSize, // This version currently bases mark size on number of injured
         line: {
             color: 'black',
             width: 2

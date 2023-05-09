@@ -73,7 +73,7 @@ function createBubbleChart(selectedYear, data) {
 
   // Filter the data based on the selected year
   // let value =     data.samples.filter(result => result.id == subjectID);  this is from previous project
-  var filteredData = data.features.filter(feature => feature.properties.yr === selectedYear);
+  var filteredData = data.features.filter(feature => feature.properties.yr == selectedYear);
 
     console.log(filteredData.length);
     console.log(filteredData);
