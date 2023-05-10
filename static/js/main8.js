@@ -144,5 +144,5 @@ Plotly.newPlot("bubble", trace2, layout, {showLink: false});
 
 function scaleInjuryCount(x)
 {
-  return ((100-5)*x)/400+5
+  return ((100-5)*x)/1000+5
 }
