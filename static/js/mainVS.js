@@ -115,10 +115,10 @@ function createBubbleChart(year, data) {
         sizemode: 'diameter',
         sizeref: 1,
         color: injVal,
-        colorscale: "Plasma",
+        colorscale: "Picnic",
 
         line: {
-            color: 'black',
+            color: 'white',
             width: 1
         },
     }
@@ -133,7 +133,7 @@ var layout = {
           type: 'albers usa'
       },
       showland: true,
-      landcolor: 'rgb(141, 238, 180)',
+      landcolor: 'rgb(173,240,179)',
       subunitwidth: 1,
       countrywidth: 1,
       subunitcolor: 'rgb(255,255,255)',
