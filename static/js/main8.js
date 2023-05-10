@@ -12,7 +12,6 @@ d3.json(sample)
     console.error(error);
   });
 
-
 // Function to create the dropdown options
 function createDropDown(data) {
   var features = data.features;
@@ -26,7 +25,7 @@ function createDropDown(data) {
   });
 
   // Create the dropdown options
-  d3.select("#year")
+  d3.select("#years")
     .selectAll("option")
     .data(yrValues)
     .enter()
@@ -35,11 +34,11 @@ function createDropDown(data) {
       return d;
     })
     .on("change", function() {
-      var selectedYear = d3.select(this).property("value");
-      createBubbleChart(selectedYear, data);
+      var year = d3.select(this).property("value");
+      createBubbleChart(year, data);
     });
 
-  // Call function createBubbleChart with the initial selected year
+  // Call function createBubbleChart with the initial selected state
   createBubbleChart(yrValues[0], data);
   
 }
@@ -52,7 +51,7 @@ function optionChanged(year)
     .then(function(data) {
       console.log(data);
     
-      // call creteBubbleChart passing it year and data
+      // call creteBubbleChart passing it state and data
     createBubbleChart(year, data);
 
     })
@@ -62,25 +61,18 @@ function optionChanged(year)
 
 }
 
+function createBubbleChart(year, data) {
 
-function createBubbleChart(selectedYear, data) {
+    //console.log(data);
+    console.log(year);
 
-    console.log(data);
-    
-    console.log(selectedYear);
+  // Filter the data based on the selected state
+  var filteredData = data.features.filter(feature => feature.properties.yr == year);
 
-   //alert("createBubbleChart called with year =  " + selectedYear);
-
-  // Filter the data based on the selected year
-  // let value =     data.samples.filter(result => result.id == subjectID);  this is from previous project
-  var filteredData = data.features.filter(feature => feature.properties.yr == selectedYear);
-
-    console.log(filteredData.length);
+    //console.log(filteredData.length);
     console.log(filteredData);
-  //console.log(filteredData[0].properties.mag);
 
-  let lenVal = [];   
-  let widVal = [];   
+  
   let magVal = [];   
   let markSize = []; 
 
@@ -89,35 +81,21 @@ function createBubbleChart(selectedYear, data) {
 
   let hoverText = [];
 
+
+
   for (i = 0; i < filteredData.length; i++)
   {
-    //console.log(filteredData[i].properties.slat);
-    lenVal.push(filteredData[i].properties.slat);
-
-    //console.log(filteredData[i].properties.slon);
-    widVal.push(filteredData[i].properties.slon);
-
     //console.log(filteredData[i].properties.inj);
-    markSize.push(filteredData[i].properties.inj);
+    markSize.push(Math.log(filteredData[i].properties.inj)*10); // normalize those injury numbers a little bit
     
-    magVal.push(filteredData[i].properties.mag);
+    magVal.push(filteredData[i].properties.mag*10);
 
     cityLat.push(filteredData[i].properties.slat);
     cityLon.push(filteredData[i].properties.slon);
-
-
-
-
+    scale = 50000;
+    displayText = ``
+    hoverText.push("Injuries: " + filteredData[i].properties.inj)
   }
-  console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-  console.log(lenVal);
-  console.log(widVal);
-  console.log(markSize);
-  console.log(magVal);
-  
-
-  
-
 
   var trace2 = [{
     type: 'scattergeo',
@@ -126,18 +104,24 @@ function createBubbleChart(selectedYear, data) {
     lon: cityLon,
     hoverinfo: 'text',
     text: hoverText,
+    mode: 'markers',
     marker: {
-        size: markSize,
+        opacity: [1, 0.8, 0.6, 0.4],
+        size: markSize, // This version currently bases mark size on number of injured
+        sizemode: 'diameter',
+        sizeref: 1,
+        color: markSize,
+        colorscale: "Plasma",
+
         line: {
-            color: 'black',
-            width: 2
+            color: 'white',
+            width: 1
         },
     }
 }];
 
-
 var layout = {
-  title: 'Tornado in the USA',
+  title: 'Tornados in the USA - Year ' + year,
   showlegend: false,
   geo: {
       scope: 'usa',
@@ -145,7 +129,7 @@ var layout = {
           type: 'albers usa'
       },
       showland: true,
-      landcolor: 'rgb(217, 217, 217)',
+      landcolor: 'rgb(141, 238, 180)',
       subunitwidth: 1,
       countrywidth: 1,
       subunitcolor: 'rgb(255,255,255)',
