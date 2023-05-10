@@ -12,7 +12,6 @@ d3.json(sample)
     console.error(error);
   });
 
-
 // Function to create the dropdown options
 function createDropDown(data) {
   var features = data.features;
@@ -62,60 +61,41 @@ function optionChanged(year)
 
 }
 
-
 function createBubbleChart(year, data) {
 
     //console.log(data);
-    
     console.log(year);
 
-   // alert("createBubbleChart called with state =  " + selectedState);
-
   // Filter the data based on the selected state
-  // let value =     data.samples.filter(result => result.id == subjectID);  this is from previous project
   var filteredData = data.features.filter(feature => feature.properties.yr == year);
 
     //console.log(filteredData.length);
     console.log(filteredData);
-  //console.log(filteredData[0].properties.mag);
 
-  let lenVal = [];   //magnitude value
-  let widVal = [];   //injuriesvalue
-  let magVal = [];   // magnitude
-  let markSize = []; // injuries
+  
+  let magVal = [];   
+  let markSize = []; 
 
   let cityLat = [];
   let cityLon = [];
 
   let hoverText = [];
 
+
+
   for (i = 0; i < filteredData.length; i++)
   {
-    //console.log(filteredData[i].properties.slat);
-    lenVal.push(filteredData[i].properties.mag);
-
-    //console.log(filteredData[i].properties.slon);
-    //widVal.push(filteredData[i].properties.inj);
-
     //console.log(filteredData[i].properties.inj);
-    markSize.push(Math.log(filteredData[i].properties.inj)*10);
+    markSize.push(Math.log(filteredData[i].properties.inj)*10); // normalize those injury numbers a little bit
     
     magVal.push(filteredData[i].properties.mag*10);
 
     cityLat.push(filteredData[i].properties.slat);
     cityLon.push(filteredData[i].properties.slon);
+    scale = 50000;
+    displayText = ``
+    hoverText.push("Injuries: " + filteredData[i].properties.inj)
   }
-
-  /*
-  console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-  console.log(lenVal);
-  console.log(widVal);
-  console.log(markSize);
-  console.log(magVal);
-  */
-
-  
-
 
   var trace2 = [{
     type: 'scattergeo',
@@ -124,18 +104,24 @@ function createBubbleChart(year, data) {
     lon: cityLon,
     hoverinfo: 'text',
     text: hoverText,
+    mode: 'markers',
     marker: {
-        size: markSize,
+        opacity: [1, 0.8, 0.6, 0.4],
+        size: markSize, // This version currently bases mark size on number of injured
+        sizemode: 'diameter',
+        sizeref: 1,
+        color: markSize,
+        colorscale: "Plasma",
+
         line: {
-            color: 'black',
-            width: 2
+            color: 'white',
+            width: 1
         },
     }
 }];
 
-
 var layout = {
-  title: 'Tornados in the USA',
+  title: 'Tornados in the USA - Year ' + year,
   showlegend: false,
   geo: {
       scope: 'usa',
@@ -143,7 +129,7 @@ var layout = {
           type: 'albers usa'
       },
       showland: true,
-      landcolor: 'rgb(217, 217, 217)',
+      landcolor: 'rgb(141, 238, 180)',
       subunitwidth: 1,
       countrywidth: 1,
       subunitcolor: 'rgb(255,255,255)',
@@ -154,9 +140,4 @@ var layout = {
 
 Plotly.newPlot("bubble", trace2, layout, {showLink: false});
 
-}
-
-function printConsole()
-{
-    console.log("What's up doc?")
 }
