@@ -1,17 +1,18 @@
+// This version of the bubble map uses magnitude for bubble size and injury count for color.
+
 // Get the url endpoint
 const sample = "https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson";
 
 // Get the .json data from the URL
 d3.json(sample)
   .then(function(data) {
-    console.log(data.features);
+    console.log(data);
 
     createDropDown(data);
   })
   .catch(function(error) {
     console.error(error);
   });
-
 
 // Function to create the dropdown options
 function createDropDown(data) {
@@ -62,65 +63,43 @@ function optionChanged(year)
 
 }
 
-
 function createBubbleChart(year, data) {
 
     //console.log(data);
-    
     console.log(year);
 
-   // alert("createBubbleChart called with state =  " + selectedState);
-
   // Filter the data based on the selected state
-  // let value =     data.samples.filter(result => result.id == subjectID);  this is from previous project
   var filteredData = data.features.filter(feature => feature.properties.yr == year);
 
     //console.log(filteredData.length);
     console.log(filteredData);
-  //console.log(filteredData[0].properties.mag);
 
-  let lenVal = [];   //magnitude value
-  //let widVal = [];   //injuriesvalue
-  let magVal = [];   // magnitude
-  let injVal = []; // injuries
+  
+  let magVal = [];   
+  let markSize = []; 
 
   let cityLat = [];
   let cityLon = [];
 
   let hoverText = [];
 
-  let normalizedMag = [];
-  let normalizedInj = [];
+  let injVal = [];
 
   for (i = 0; i < filteredData.length; i++)
   {
-    //console.log(filteredData[i].properties.slat);
-    lenVal.push(filteredData[i].properties.mag);
-
-    //console.log(filteredData[i].properties.slon);
-    //widVal.push(filteredData[i].properties.inj);
-
     //console.log(filteredData[i].properties.inj);
-    injVal.push(filteredData[i].properties.inj); 
-    normalizedInj.push(scaleInjuryCount(filteredData[i].properties.inj)) // normalize those injury numbers a little bit, adjust the math as desired
+    markSize.push(scaleInjuryCount(filteredData[i].properties.inj)); // normalize those injury numbers a little bit
+    
+    injVal.push(filteredData[i].properties.inj);
 
-    magVal.push(filteredData[i].properties.mag); 
-    normalizedMag.push(filteredData[i].properties.mag*10); // values between 1 and 5 are too small for this
+    magVal.push(filteredData[i].properties.mag*5); // just to make the markers more visible
 
-    cityLat.push(filteredData[i].properties.slat); // we're using starting coordinates instead of ending coordinates currently
+    cityLat.push(filteredData[i].properties.slat);
     cityLon.push(filteredData[i].properties.slon);
-
-    displayText = `Magnitude: ${filteredData[i].properties.mag}, Number of injured: ${filteredData[i].properties.inj}`; // this needs fixing to look nice
-    hoverText.push(displayText);
+    scale = 50000;
+    displayText = ``
+    hoverText.push("Injuries: " + filteredData[i].properties.inj)
   }
-
-  /*
-  console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-  console.log(lenVal);
-  console.log(widVal);
-  console.log(markSize);
-  console.log(magVal);
-  */
 
   var trace2 = [{
     type: 'scattergeo',
@@ -129,19 +108,24 @@ function createBubbleChart(year, data) {
     lon: cityLon,
     hoverinfo: 'text',
     text: hoverText,
+    mode: 'markers',
     marker: {
-        size: normalizedInj, // This version currently bases mark size on number of injured
-        //fillColor: colorsVals,
+        opacity: [1, 0.8, 0.6, 0.4],
+        size: magVal, // This version currently bases mark size on tornado magnitude
+        sizemode: 'diameter',
+        sizeref: 1,
+        color: injVal,
+        colorscale: "Plasma",
+
         line: {
             color: 'black',
-            width: 2
+            width: 1
         },
     }
 }];
 
-
 var layout = {
-  title: 'Tornados in the USA',
+  title: 'Tornados in the USA - Year ' + year,
   showlegend: false,
   geo: {
       scope: 'usa',
@@ -149,7 +133,7 @@ var layout = {
           type: 'albers usa'
       },
       showland: true,
-      landcolor: 'rgb(217, 217, 217)',
+      landcolor: 'rgb(141, 238, 180)',
       subunitwidth: 1,
       countrywidth: 1,
       subunitcolor: 'rgb(255,255,255)',
@@ -162,12 +146,8 @@ Plotly.newPlot("bubble", trace2, layout, {showLink: false});
 
 }
 
-function printConsole()
-{
-    console.log("What's up doc?")
-}
-
+// assumes the original injury count min = 0 and max = 1000, scale it to somewhere between 5 and 100
 function scaleInjuryCount(x)
 {
-  return ((100-2)*x)/150+2
+  return ((100-5)*x)/1000+5
 }
