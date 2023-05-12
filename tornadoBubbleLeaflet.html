@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>@Tornado Data@</title>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+crossorigin="" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- Our CSS -->
+<link rel="stylesheet" type="text/css" href="static/css/style.css">
+
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  
+
+
+    <!-- D3 JavaScript -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+
+
+</head>
+
+  <body>
+
+    <div class="well">
+      <div class="TitleStyle" id="title"></div>
+      <h4>Select a year:</h4>
+        <select id="year" onchange="optionChanged(this.value)"></select>
+    </div> 
+
+    <!-- The div that holds our map -->
+    <div id="map"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin="" />
+
+    <script src="./static/js/tornadoBubbleLeaflet.js"></script>  
+
+
+
+
+
+
+  </body>
+
+</html>
