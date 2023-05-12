@@ -1,0 +1,42 @@
+  #map,
+  body,
+  html {
+    justify-items: auto;
+    height: 500px;
+    width: 600px;
+    padding: 10px;
+    box-sizing: content-box;
+  }
+  
+  /* Set Legend Style */
+  .info {
+    padding: 1px 10px;
+    background: #fefffe;
+    border-radius: 5px;
+  }
+  
+  .legend {
+    line-height: 25px;
+    color: #000000;
+  }
+  
+  .legend i {
+    width: 20px;
+    height: 20px;
+    float: right;
+    margin-right: 10px;
+    margin-left: 10px;
+    opacity: 0.75;
+  }
+  
+  h3 {
+    margin: 0px;
+    padding: 2px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  p {
+    margin: -5px;
+    padding:10px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
