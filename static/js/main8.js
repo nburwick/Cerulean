@@ -86,9 +86,9 @@ function createBubbleChart(year, data) {
   for (i = 0; i < filteredData.length; i++)
   {
     //console.log(filteredData[i].properties.inj);
-    markSize.push(Math.log(filteredData[i].properties.inj)*10); // normalize those injury numbers a little bit
+    markSize.push(scaleInjuryCount(filteredData[i].properties.inj)); // normalize those injury numbers a little bit
     
-    magVal.push(filteredData[i].properties.mag*10);
+    magVal.push(filteredData[i].properties.mag);
 
     cityLat.push(filteredData[i].properties.slat);
     cityLon.push(filteredData[i].properties.slon);
@@ -110,7 +110,7 @@ function createBubbleChart(year, data) {
         size: markSize, // This version currently bases mark size on number of injured
         sizemode: 'diameter',
         sizeref: 1,
-        color: markSize,
+        color: magVal,
         colorscale: "Plasma",
 
         line: {
@@ -140,4 +140,9 @@ var layout = {
 
 Plotly.newPlot("bubble", trace2, layout, {showLink: false});
 
+}
+
+function scaleInjuryCount(x)
+{
+  return ((100-5)*x)/1000+5
 }
