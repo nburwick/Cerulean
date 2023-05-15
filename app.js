@@ -1,9 +1,8 @@
-// Fetch the data from the URL using d3.json
-const url = "https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Tornado_Tracks_1950_2017_1/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson";
 
-d3.json(url).then(data => {
+// //const url = "https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Tornado_Tracks_1950_2017_1/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson";
+d3.json("tornado_Tracks.geojson").then(data => {
   // Create a list of dictionaries
-  var tornadoes = [];
+  let tornadoes = [];
   for (const feature of data.features) {
     const properties = feature.properties;
     const tornado = {
@@ -16,95 +15,85 @@ d3.json(url).then(data => {
       year: properties.yr
     };
     tornadoes.push(tornado);
-  }
+  };
 
   console.log(tornadoes);
 
-  let tornadoarray=[];
-  for (var i=0; i<tornadoes.length; i++) {
-    tornadoarray.push([tornadoes[i].slat,tornadoes[i].slon])
+  let tornadoarray = [];
+  for (var i = 0; i < tornadoes.length; i++) {
+    tornadoarray.push([tornadoes[i].slat, tornadoes[i].slon, tornadoes[i].year])
   };
-
   console.log(tornadoarray);
 
+  //________________________________________________________
+  //dropdown
+  //________________________________________________________
 
-  // Extract latitudes and longitudes from the tornado data
-  // var coordinates = tornadoes.map(function (tornado) {
-  //   return [tornado.slat, tornado.slon];
-  // });
+  let years = [];
+  for (var i = 0; i < tornadoes.length; i++) {
+    if (!years.includes(tornadoes[i].year)) {
+      years.push(tornadoes[i].year);
+    }
+  };
 
-  //console.log(coordinates);
+  console.log(years);
 
+  var select = d3.select("#selDataset");
 
+  years.forEach((year) => {
+    select.append("option")
+      .text(year)
+      .property("value",year);
+  });
 
-  // Create a Leaflet map and add the heat map layer
-  var myMap = L.map("map").setView([37.0902, -95.7129], 4);
+  //___________________________________________________
+  // Create a custom filtering function
+  //___________________________________________________
 
+  function select_year(year) {
+    return tornadoarray.filter(tornado => tornado[2] == year);
+  };
+  
+  // Set the default year to display on the map
+  let defaultYear = 2022;
+  
+  // Create a function to update the map based on the selected year
+  function updateMap(year) {
+    // Filter the tornadoarray based on the selected year
+    let tornado_year = select_year(year);
+    
+    // Remove the previous heat layer from the map
+    if (heat) {
+      myMap.removeLayer(heat);
+    }
+    
+    // Create a new heat layer with the filtered data and add it to the map
+    heat = L.heatLayer(tornado_year, {
+      radius: 10,
+      minOpacity: 0.4,
+      gradient: { 0.4: 'blue', 0.5: 'lime', 0.6: 'red' }
+    }).addTo(myMap);
+
+    //  let yearLabel = document.getElementById("year-label");
+    // yearLabel.innerHTML = year;
+  };
+  
+  // Add an event listener to the dropdown to update the map when a new year is selected
+  d3.select("#selDataset").on("change", function() {
+    let selectedYear = d3.event.target.value;
+    updateMap(selectedYear);
+  });
+  
+  // Initialize the map with the default year
+  let tornado_year = select_year(defaultYear);
+  var myMap = L.map("map").setView([37.0902, -95.7129], 4.5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(myMap);
-
-
- let heat = L.heatLayer(tornadoarray, {
-  radius: 25,
-  minOpacity : 0.2,
-  gradient:{0.4:'blue', 0.5:'lime', 0.6:'red'}}).addTo(myMap);
-  
-  
-
-
-  //_______________________MAKE CIRCLE____________________________
-
-  // var heat = L.layerGroup().addTo(myMap);
-
-  // coordinates.forEach(function(coord) {
-  //   heat.addLayer(L.circle(coord, {  
-  //     radius: 5,
-  //     blur: 15,
-  //     maxZoom: 17,
-  //   }));
-  // });
-
-  //____________________________MAKE HEAT MAP_____________________________
-  // var heatMapPoints = coordinates;
-  // console.log(heatMapPoints);
-
-  // var heat = L.heatLayer(heatMapPoints, {radius: 25 }).addTo(map);
-
-
-
-  // var heat = L.heatLayer(coordinates, {
-  //   radius: 25,
-  //   gradient :{0.4:'blue', 0.65:'lime', 1:'red'}
-  //   }).addTo(map);
-
-
-  //   // Create a Leaflet map and add the density map layer
-  //   var myMap = L.map("map").setView([37.0902, -95.7129], 4);
-
-  //   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  //   }).addTo(myMap);
-
-  //   var markers = L.markerClusterGroup({
-  //     spiderfyOnMaxZoom: false,
-  //     showCoverageOnHover: false,
-  //     zoomToBoundsOnClick: false
-  //   });
-
-  //   markers.addLayer(L.densityMarkerLayer({
-  //     radius: 20,
-  //     blur: 10,
-  //     gradient: {
-  //       0.4: 'blue',
-  //       0.65: 'lime',
-  //       1: 'red'
-  //     },
-  //     data: coordinates
-  //   }));
-
-  //   myMap.addLayer(markers);
-
-
-
+  let heat = L.heatLayer(tornado_year, {
+    radius: 10,
+    minOpacity: 0.4,
+    gradient: { 0.4: 'blue', 0.5: 'lime', 0.6: 'red' }
+  }).addTo(myMap);
 });
+
