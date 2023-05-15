@@ -1,17 +1,25 @@
-// Testing d3 connection
+// Connect to Flask API
 
 function update_api(state){
-    let st = state || "OK"
+    let st = state || "TX"
     var url = `http://localhost:8000/api/v1.0/${st}`
     return url
 }
 
-let url = update_api()
+
 
 // Initialize and create features from Flask-API Data
-function render(){d3.json(url).then(function(data){
-    createFeatures(data)
+function render(){
+    var yr = 2022
+    d3.json(update_api("AZ")).then(function(data, year){
+    createFeatures(data, yr)
 });}
+
+
+function createFeatures(data, year){
+    var yr = year
+    createPaths(data, yr)
+}
 
 // Create a function to map colors to features and legend related to Magnitude (mag)
 function chooseColor(mag){
@@ -33,35 +41,45 @@ function chooseColor(mag){
     else return 6;
   }
 
+// Define a function that we want to run once for each feature in the features array.
+// Give each feature a popup that describes the place and time of the tornado.
+function onEachFeature(feature, layer) {
+layer.bindPopup(`<h3>Tornado ID: ${feature.properties.OBJECTID}</h3><hr><p>Date/Time: ${new Date(feature.properties.Date_Calc)}</p><p>Magnitude: ${feature.properties.mag}</p><p>Loss: $${(feature.properties.loss).toLocaleString()}</p><p>Length (Miles): ${feature.properties.len}</p>`,{maxWidth: 560});
+}
+
+function createStyle(feature){
+    var style ={
+        color: chooseColor(feature.properties.mag), // d.properties.loss or d.properties.mag .... 
+        weight: chooseWeight(feature.properties.mag)
+}
+return style
+}
+
 // Create function to create features and popups per data.
-function createFeatures(tornados) {
+function createPaths(data, year) {
+    console.log(data)
+        // Filter Data by Year?
+        var yr = year || 0
+        var tornados = data
+        if(yr != 0){
+            tornados = data.filter(feature => feature.properties.yr == year)
+        }
     console.log(tornados)
-    // Define a function that we want to run once for each feature in the features array.
-    // Give each feature a popup that describes the place and time of the earthquake.
-    function onEachFeature(feature, layer) {
-      layer.bindPopup(`<h3>Tornado ID: ${feature.properties.OBJECTID}</h3><hr><p>Date/Time: ${new Date(feature.properties.Date_Calc)}</p><p>Magnitude: ${feature.properties.mag}</p><p>Loss: $${(feature.properties.loss).toFixed(2).toLocaleString()}</p><p>Length (Miles): ${feature.properties.len}</p>`);
-    }
-  
+
     // Create a GeoJSON layer that contains the features array on the tornados object.
     // Run the onEachFeature function once for each piece of data in the array.
     var tornado_data = L.geoJSON(tornados, {
       onEachFeature: onEachFeature,
-    
-      style: function (feature){
-        var style ={
-            color: chooseColor(feature.properties.mag), // d.properties.loss or d.properties.mag .... 
-            weight: chooseWeight(feature.properties.mag)
-    }
-    return style
-}
+      style: createStyle
     })
-
   
-    // Send our tornados layer to the createMap function/
+    // Send our tornado tracks layer to variable
     createMap(tornado_data);
   }
 
 function createMap(tornados) {
+    
+
 
     // Create tile layers
     var outdoors = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}', {
