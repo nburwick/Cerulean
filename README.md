@@ -32,8 +32,9 @@ Given the widespread destruction and frequency of tornado occurrences across the
 To run the app:
 1. Git clone- https://github.com/nburwick/Cerulean.git
 2. CD into local directory
-3. 
-4. 
+3. CD into Flask directory
+4. Run python app.py
+5. Launch Go Live Server in VSCode for index.html
 
 
 ## Implementation Details
@@ -42,19 +43,17 @@ This repository provides a collection of scripts and files that demonstrate the 
 1. MongoDB Tornado Data.ipynb - Performs the ETL, which includes:
     1. Requesting an API endpoint
 
-2. api_testing.ipynb - 
-    1. 
-
-3. index.html - 
+2. index.html - 
     1. Accesses all the libraries being used in the dashboard
     2. Displays various page contents:
         1. Dropdown menus to view data by state and year
         2. Links to JavaScript and CSS files to render various visualizations
 
-4.  mainAr.js - 
-    1. 
+3.  pipeline.js - 
+    1. Creates and calls the data via the "update_api" function to call data (can be called in other JS Scripts)
+    2. Accesses all the functions to build the map
 
-5. style.css - This file stores all the styling specifications for various “ids” and “classes” in the index.html file.
+4. style.css - This file stores all the styling specifications for various “ids” and “classes” in the index.html file.
 
 ## Credits
 - FEMA Tornado Data: https://gis-fema.hub.arcgis.com/datasets/fedmaps::tornado-tracks-1/about 
