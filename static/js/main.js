@@ -1,14 +1,15 @@
 // Connect to Flask API
 
 function update_api(state){
-    let st = state || "all"
+    let st = state || "TX"
     var url = `http://localhost:8000/api/v1.0/${st}`
     return url
 }
 
 // Create function to initialize map to be called later with API Data
-function render(){d3.json(update_api()).then(function(data){
-    createMap(data)
+function initialize(){d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data){
+    createDrops(data.features);
+    createMap(data.features);
 });}
 
 // Create a function to map colors to features and legend related to Magnitude (mag)
@@ -34,7 +35,7 @@ function chooseColor(mag){
 // Define a function that we want to run once for each feature in the features array.
 // Give each feature a popup that describes the place and time of the tornado.
 function onEachFeature(feature) {
-    return `<h3>Tornado ID: ${feature.properties.OBJECTID}</h3><hr><p>Date/Time: ${new Date(feature.properties.Date_Calc)}</p><p>Magnitude: ${feature.properties.mag}</p><p>Loss: $${(feature.properties.loss).toLocaleString()}</p><p>Length (Miles): ${feature.properties.len}</p>`;
+    return `<h3>Tornado ID: ${feature.properties.OBJECTID}</h3><hr><p>Date/Time: ${new Date(feature.properties.Date_Calc)}</p><p>State: ${feature.properties.st}</p><p>Magnitude: ${feature.properties.mag}</p><p>Loss: $${(feature.properties.loss).toLocaleString()}</p><p>Length (Miles): ${feature.properties.len}</p>`;
 }
 
 // Create function to return style object for bubble and tracks layers on map
@@ -86,6 +87,12 @@ function createBubbles(data){
     return tornado_bubbles
 }
 
+function createHeat(data){
+  var coordinates = data.map(tornado => [tornado.properties.slat, tornado.properties.slon])
+  
+  return coordinates
+}
+
 // Create map
 function createMap(data, year){
     // Filter Data by Year?
@@ -94,9 +101,11 @@ function createMap(data, year){
     if(yr != 0){
         tornados = data.filter(feature => feature.properties.yr == year)
     }
-    console.log(tornados)
+    // console.log(tornados)
+
+
     // Create Tile Layers
-    var outdoors = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}', {
+    var outdoors = new L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}', {
         maxZoom: 20,
         attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
     });
@@ -110,27 +119,33 @@ function createMap(data, year){
         };
     
         // Create layer groups
-        var tracks = L.layerGroup(createTracks(tornados))
-        var bubbles = L.layerGroup(createBubbles(tornados))
+        var tracks = new L.layerGroup(createTracks(tornados))
+        var bubbles = new L.layerGroup(createBubbles(tornados))
+        var heat = new L.heatLayer(createHeat(tornados),{
+  radius: 15,
+  minOpacity: 0.3,
+  gradient: {0.1: 'blue', 0.3: 'green', 0.6: 'yellow', 0.8: 'orange', 1: 'red'}
+})
         // Create an overlay object to hold our overlay.
         
         var overlayMaps = {
             "Tornado Tracks": tracks,
-          //   "Heat Map": createHeat(data, year),
+            "Heat Map": heat,
             "Bubble Map": bubbles,
         };
 
     // Create our map, giving it the satellite map and tornados layers to display on load.
-    var myMap = L.map("map", {
+    var myMap = new L.map("map", {
         center: [
           37.09, -95.71
         ],
-        zoom: 5,
+        zoom: 4.25,
         layers: [outdoors, tracks]
       });
     
+
     // Add legend
-    var legend = L.control({position: "bottomright"});
+    var legend = new L.control({position: "bottomright"});
     legend.onAdd = function() {
       var div = L.DomUtil.create("div", "info legend"),
       mag = [-10, -1, 1, 2, 3, 4];
@@ -148,17 +163,62 @@ function createMap(data, year){
       // Create a layer control.
       // Pass it our baseMaps and overlayMaps.
       // Add the layer control to the map.
-      L.control.layers(baseMaps, overlayMaps, {
-        collapsed: false
-      }).addTo(myMap);        
+      L.control.layers(baseMaps, null, {collapsed: false}).addTo(myMap);
+      L.control.layers(overlayMaps, null, {collapsed: false}).addTo(myMap);        
 }
 
 
-// Create DropDown for Years
+// Create DropDowns
+function createDrops(data){
+        const states = [... new Set(data.map(entry => entry.properties.st))]
+        states.sort((a,b) => d3.ascending(a,b))
+        d3.select("#states")
+        .selectAll("option")
+        .data(states)
+        .enter()
+        .append("option")
+        .text(d => d)
+        .attr("value", d => d);
+
+        const years = [... new Set(data.map(entry => entry.properties.yr))]
+        years.sort((a,b) => d3.ascending(b,a))
+        d3.select('#years')
+        .selectAll("option")
+        .data(years)
+        .enter()
+        .append("option")
+        .text(d => d)
+        .attr("value", d => d)
+
+}
+
+// Create function to update from both lists
+function optionChanged(){
+    var stateDrop = document.getElementById('states')
+    var state = stateDrop.value
+    var yearDrop = document.getElementById('years')
+    var year = yearDrop.value
+    console.log(state)
+    console.log(year)
+    var mapContainer = document.getElementById('map')
+    if(mapContainer != null){
+      mapContainer.remove()
+        // Create a new map container element
+  var newMapContainer = document.createElement('div');
+  newMapContainer.id = 'map';
+
+  // Append the new map container to the document body
+  document.body.appendChild(newMapContainer);
+    }
+    
 
 
-// Create DropDown for State
-
+    d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data){
+      var tornados = data.features
+      if(state != "all"){tornados = tornados.filter(feature => feature.properties.st == state)}
+      createMap(tornados, year)
+    })
+}
 
 // render first view of map
-render();
+initialize();
