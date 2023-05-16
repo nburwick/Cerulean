@@ -1,4 +1,4 @@
-# Team Cerulean
+# Project 3
 
 ![alt text](https://github.com/nburwick/Cerulean/blob/main/images/readme_pic.png)
 
