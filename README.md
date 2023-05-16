@@ -42,6 +42,7 @@ This repository provides a collection of scripts and files that demonstrate the 
 
 1. MongoDB Tornado Data.ipynb - Performs the ETL, which includes:
     1. Requesting an API endpoint
+    2. Saving this data as a MongoDB database for future use
 
 2. index.html - 
     1. Accesses all the libraries being used in the dashboard
