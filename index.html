@@ -6,19 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>US Tornadoes 1950-2022</title>
-        <!-- D3 JavaScript -->
+
+        <!-- Plotly JavaScript -->
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+        <!-- D3 JavaScript -->
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        
         <!-- Leaflet JS -->
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
             integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
             crossorigin=""></script>
+        <!-- Leaflet Heat JS -->
         <script src="static/js/leaflet-heat.js"></script>
 
         <!-- Stamen Maps JS -->
         <script type="text/javascript" src="https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js?v1.3.0"></script>
-        
 
         <!-- Leaflet CSS -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
@@ -27,7 +30,7 @@
 
         <!-- Our CSS -->
         <link rel="stylesheet" type="text/css" href="static/css/style.css">
-
+  
 
 </head>
 
@@ -76,16 +79,8 @@
               if(selectedValue == 'chartFatalities'){fatalities()}
               else if(selectedValue == 'chartMagnitude'){magnitude()}
               else{propertyLoss()}
-              /* // Hide all charts
-              for (var i = 0; i < chartContainers.length; i++) {
-                chartContainers[i].style.display = "none";
-              }
-        
-              // Show the selected chart
-              document.getElementById(selectedValue).style.display = "block"; */
             }
           </script>
-
           <div id="line" class="chart-container"></div>
           <p></p>
           
