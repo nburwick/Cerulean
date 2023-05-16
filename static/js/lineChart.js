@@ -59,7 +59,7 @@ function createStats(){
                     var month = feature["properties"]["mo"]
                     aggregateData(tornadoStats, year, month)
                 });
-                console.log("Tornado Stats: ", tornadoStats)
+                // console.log("Tornado Stats: ", tornadoStats)
                 updateYearDropDown(tornadoStats)
             }
 
