@@ -144,21 +144,21 @@ function createMap(data, year){
     });
   
 
-  // Add legend
-  var legend = new L.control({position: "bottomright"});
-  legend.onAdd = function() {
-    var div = L.DomUtil.create("div", "info legend"),
-    mag = [-10, -1, 1, 2, 3, 4];
-  
-    div.innerHTML += "<h3 style='text-align: center'>Magnitude</h3>"
-  
-    for (var i = 0; i < mag.length; i++) {
-      div.innerHTML +=
-      '<i style="background:' + chooseColor(mag[i] + 1) + '"></i> ' + mag[i] + "<br>";
-    }
-    return div;
-  };
-  legend.addTo(myMap)
+    // Add legend
+    var legend = new L.control({position: "bottomright"});
+    legend.onAdd = function() {
+      var div = L.DomUtil.create("div", "info legend"),
+      mag = [0,1,2,3,4,5];
+    
+      div.innerHTML += "<h3 style='text-align: center'>Magnitude</h3>"
+    
+      for (var i = 0; i < mag.length; i++) {
+        div.innerHTML +=
+        '<i style="background:' + chooseColor(mag[i] + 1) + '"></i> ' + mag[i] + "<br>";
+      }
+      return div;
+    };
+    legend.addTo(myMap)
   
     // Create a layer control.
     // Pass it our baseMaps and overlayMaps.
