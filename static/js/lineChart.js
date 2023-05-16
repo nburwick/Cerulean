@@ -1,4 +1,4 @@
-const tornadoStats = new Map()
+var tornadoStats = new Map()
 
             var layout = {
                 title: {
@@ -32,12 +32,16 @@ const tornadoStats = new Map()
                 }
             };
 
-            d3.json(update_api())
+            function linechart(){
+                var state = document.getElementById('states').value
+                d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson")
             .then(function(response) {
+                
+
                 // console.log("Response: ", response)
                processData(response)
                pickYear()
-            })
+            })}
 
             function pickYear() {
                 var year = document.getElementById("yearLine").value;
@@ -121,4 +125,4 @@ const tornadoStats = new Map()
                     
                 }
             }
-            
+            linechart();

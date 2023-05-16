@@ -114,8 +114,8 @@ function createMap(data, year){
     
         // Create a baseMaps object.
         var baseMaps = {
-          "Grayscale": gray,
           "Outdoors": outdoors,
+          "Grayscale": gray,
         };
     
         // Create layer groups
@@ -130,8 +130,8 @@ function createMap(data, year){
         
         var overlayMaps = {
             "Tornado Tracks": tracks,
-            "Heat Map": heat,
             "Bubble Map": bubbles,
+            "Heat Map": heat,
         };
 
     // Create our map, giving it the satellite map and tornados layers to display on load.
@@ -139,7 +139,7 @@ function createMap(data, year){
         center: [
           37.09, -95.71
         ],
-        zoom: 4.25,
+        zoom: 4.75,
         layers: [outdoors, tracks]
       });
     
@@ -148,13 +148,13 @@ function createMap(data, year){
     var legend = new L.control({position: "bottomright"});
     legend.onAdd = function() {
       var div = L.DomUtil.create("div", "info legend"),
-      mag = [-10, -1, 1, 2, 3, 4];
+      mag = [0,1,2,3,4,5];
     
       div.innerHTML += "<h3 style='text-align: center'>Magnitude</h3>"
     
       for (var i = 0; i < mag.length; i++) {
         div.innerHTML +=
-        '<i style="background:' + chooseColor(mag[i] + 1) + '"></i> ' + mag[i] + (mag[i + 1] ? ' &ndash; ' + mag[i + 1] + '<br>' : '+');
+        '<i style="background:' + chooseColor(mag[i] + 1) + '"></i> ' + mag[i] + "<br>";
       }
       return div;
     };
@@ -181,6 +181,7 @@ function createDrops(data){
         .attr("value", d => d);
 
         const years = [... new Set(data.map(entry => entry.properties.yr))]
+        years.push(2022)
         years.sort((a,b) => d3.ascending(b,a))
         d3.select('#years')
         .selectAll("option")

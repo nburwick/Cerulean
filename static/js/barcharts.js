@@ -1,7 +1,10 @@
 // Load the GeoJSON file
-d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data) {
+function fatalities(){d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data) {
   // Extract the features from the GeoJSON data
+  var state = document.getElementById('states').value
+
   var features = data.features;
+  if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
 
   // Group the features by year and calculate the sum of fatalities for each year
   var fatalitiesData = d3.rollups(
@@ -56,14 +59,17 @@ d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resourc
   };
   
   // Plot the Fatalities bar chart
-  Plotly.newPlot("chartFatalities", dataFatalities, layoutFatalities);
-});
+  Plotly.newPlot("barcharts", dataFatalities, layoutFatalities);
+})};
 
 
 // Load the geoJSON file
-d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data) {
+function magnitude(state){d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data) {
   // Extract the properties from the geoJSON features
+  var state = document.getElementById('states').value
+
   var features = data.features;
+  if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
 
   // Extract the years and magnitudes from the features
   var years = features.map(function(feature) {
@@ -142,14 +148,17 @@ d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resourc
     },
   };
 
-  Plotly.newPlot('chartMagnitude', data, layout);
-});
+  Plotly.newPlot('barcharts', data, layout);
+})};
 
 
 // Load the geoJSON file
-d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data) {
+function propertyLoss(state){d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data) {
     // Extract the properties from the geoJSON features
+    var state = document.getElementById('states').value
+
     var features = data.features;
+    if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
   
     // Categorize the property loss values
     features.forEach(function(feature) {
@@ -310,5 +319,7 @@ var layout = {
   ],
 };
 
-Plotly.newPlot("chart1950to1995", data, layout);
-});
+Plotly.newPlot("barcharts", data, layout);
+})
+}
+fatalities();

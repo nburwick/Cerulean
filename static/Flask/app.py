@@ -7,10 +7,10 @@ import datetime as dt
 
 # Database setup
 # Create mongo
-uri = 'mongodb+srv://nburwick:Swim_Fast01@cluster0.nvujnf4.mongodb.net/?retryWrites=true&w=majority'
+uri = 'mongodb://localhost:27017'
 server = ServerApi('1')
 # Create a new client and connect to the server
-mongo = MongoClient(uri, server_api=server)
+mongo = MongoClient(uri)
 fema_data = mongo['fema_data']
 tornados = fema_data['tornado_data']
 
@@ -35,7 +35,7 @@ def all_data():
         geoJSON = list(tornados.find({}))
         geoJSON = [{"geometry": doc['geometry'], "properties": doc['properties'], "type": doc['type']}
                    for doc in geoJSON]
-        return jsonify(geoJSON)
+        return jsonify({"features":geoJSON})
     except:
         return jsonify({'error':'An error occurred'})
     
@@ -50,7 +50,7 @@ def state_data(state):
         geoJSON = list(tornados.find({"properties.st": st}))
         geoJSON = [{"geometry": doc['geometry'], "properties": doc['properties'], "type": doc['type']} 
                    for doc in geoJSON]
-        return jsonify(geoJSON)
+        return jsonify({"features":geoJSON})
     except:
         return jsonify({'error': "A state was not selected or available"})
         
