@@ -1,7 +1,7 @@
 # Team Cerulean
 # U.S. Tornadoes from 1950 - 2022
 
-![alt text]()
+![alt text](https://github.com/nburwick/Cerulean/blob/main/images/readme_pic.png)
 
 For centuries, tornadoes have raised concerns as one of the most violent and devastating natural disasters. With their immense power and high-speed winds, they cause extensive damage, amounting to millions or even billions of dollars, impacting buildings, infrastructure, and the environment. The comprehensive dataset provided by FEMA offers valuable insights into tornadoes in the United States, including occurrence counts, affected regions, fatalities, property loss, and average intensity.
 
