@@ -1,5 +1,4 @@
 # Team Cerulean
-# U.S. Tornadoes from 1950 - 2022
 
 ![alt text](https://github.com/nburwick/Cerulean/blob/main/images/readme_pic.png)
 
