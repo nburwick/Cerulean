@@ -1,14 +1,115 @@
-<html>
-    <body>
-        <label>Year: </label>
-        <select name="year" id="year" class="year" onchange={pickYear()}>
+<!DOCTYPE html>
+<html lang="en">
 
-        </select>
-        <hr>
-        <div id="tester" style="width:600px;height:250px;"></div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>US Tornadoes 1950-2022</title>
+        <!-- D3 JavaScript -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="https://cdn.plot.ly/plotly-2.20.0.min.js" charset="utf-8"></script>
-        <script src="./main.js"></script>
-    </body>
-</html>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+            integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+            crossorigin=""></script>
+        <script src="static/js/leaflet-heat.js"></script>
 
+        <!-- Stamen Maps JS -->
+        <script type="text/javascript" src="https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js?v1.3.0"></script>
+        
+
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+            integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+            crossorigin="" />
+
+        <!-- Our CSS -->
+        <link rel="stylesheet" type="text/css" href="static/css/style.css">
+
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-12 jumbotron text-center">
+            <h1>US Tornadoes 1950-2022</h1>
+            <p>Use the interactive charts below to explore the dataset<br></p>
+            <p></p>
+          </div>
+        </div>
+    <div>
+        <div>
+          <div class="chart-wrapper">
+            <h3>Bar Chart Analyses</h3>
+            <label for="chartSelector">Select Chart:</label>
+            <select id="chartSelector" onchange="handleDropdownChange(this.value)">
+              <option value="chartFatalities">Tornado Fatalities</option>
+              <option value="chartMagnitude">Tornado Magnitude</option>
+              <option value="chart1950to1995">Tornado Property Loss</option>
+            </select>
+          </div>
+          <div class="chart-wrapper">
+            <h3>Seasonal Line Chart by Year</h3>
+            <p></p>
+            <label for="yearLine">Select Year for Line Chart: </label>
+            <select name="yearLine" id="yearLine" class="year" onchange={pickYear()} onload="plotGraph(tornadoStats, 1950)"></select>
+          </div>
+            <hr>
+          </div>
+          <div id="barcharts" class="chart-container" onload="handleDropdownChange()"></div>
+          <!-- <div id="chartMagnitude" class="chart-container"></div>
+          <div id="chart1950to1995" class="chart-container"></div> -->
+          <script>
+            // Hide all charts except the first one
+            var chartContainers = document.getElementById("barcharts");
+            for (var i = 1; i < chartContainers.length; i++) {
+              chartContainers[i].style.display = "none";
+            }
+        
+            // Dropdown menu handler
+            function handleDropdownChange() {
+              var selectedValue = document.getElementById("chartSelector").value;
+              if(selectedValue == 'chartFatalities'){fatalities()}
+              else if(selectedValue == 'chartMagnitude'){magnitude()}
+              else{propertyLoss()}
+              /* // Hide all charts
+              for (var i = 0; i < chartContainers.length; i++) {
+                chartContainers[i].style.display = "none";
+              }
+        
+              // Show the selected chart
+              document.getElementById(selectedValue).style.display = "block"; */
+            }
+          </script>
+
+          <div id="line" class="chart-container"></div>
+          <p></p>
+          
+  <!-- The div that holds our map -->
+    <h3>GeoMap of US Tornadoes</h3>
+    <p></p>
+    <label for="states">Select State: </label>
+    <select id="states" onchange="optionChanged(); fatalities(); linechart();">
+        <option value="all">All States</option>
+    </select>
+    <label for="years">Select Year: </label>
+    <select id="years" onchange="optionChanged()">
+        <option value="0">1950-2022</option>
+    </select>
+    <hr>
+    <div id="map"></div>
+
+
+  <!-- Our JavaScripts -->
+  
+  <script type="text/javascript" src="static/js/pipeline.js"></script>
+  <script type="text/javascript" src="static/js/barcharts.js"></script>
+  <script type="text/javascript" src="static/js/lineChart.js"></script>
+  
+</body>
+
+</html>
