@@ -1,10 +1,12 @@
 // Load the GeoJSON file
-function fatalities(){d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data) {
-  // Extract the features from the GeoJSON data
+function fatalities(){
   var state = document.getElementById('states').value
+  d3.json(update_api(state)).then(function(data) {
+  // Extract the features from the GeoJSON data
+  
 
   var features = data.features;
-  if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
+  // if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
 
   // Group the features by year and calculate the sum of fatalities for each year
   var fatalitiesData = d3.rollups(
@@ -64,12 +66,14 @@ function fatalities(){d3.json("https://raw.githubusercontent.com/nburwick/Cerule
 
 
 // Load the geoJSON file
-function magnitude(state){d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data) {
+function magnitude(state){
   // Extract the properties from the geoJSON features
   var state = document.getElementById('states').value
+  d3.json(update_api(state)).then(function(data) {
+  // Extract the properties from the geoJSON features
 
   var features = data.features;
-  if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
+  // if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
 
   // Extract the years and magnitudes from the features
   var years = features.map(function(feature) {
@@ -153,12 +157,13 @@ function magnitude(state){d3.json("https://raw.githubusercontent.com/nburwick/Ce
 
 
 // Load the geoJSON file
-function propertyLoss(state){d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data) {
+function propertyLoss(state){
+  var state = document.getElementById('states').value
+  d3.json(update_api(state)).then(function(data) {
     // Extract the properties from the geoJSON features
-    var state = document.getElementById('states').value
 
     var features = data.features;
-    if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
+    // if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
   
     // Categorize the property loss values
     features.forEach(function(feature) {

@@ -1,4 +1,7 @@
-var tornadoStats = new Map()
+var tornadoStats;
+function createStats(){
+    tornadoStats = new Map()
+}
 
             var layout = {
                 title: {
@@ -33,8 +36,9 @@ var tornadoStats = new Map()
             };
 
             function linechart(){
+                createStats()
                 var state = document.getElementById('states').value
-                d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson")
+                d3.json(update_api(state))
             .then(function(response) {
                 
 
@@ -55,7 +59,7 @@ var tornadoStats = new Map()
                     var month = feature["properties"]["mo"]
                     aggregateData(tornadoStats, year, month)
                 });
-                // console.log("Tornado Stats: ", tornadoStats)
+                console.log("Tornado Stats: ", tornadoStats)
                 updateYearDropDown(tornadoStats)
             }
 
