@@ -7,10 +7,10 @@ import datetime as dt
 
 # Database setup
 # Create mongo
-uri = 'mongodb://localhost:27017'
+uri = 'mongodb+srv://nburwick:Swim_Fast01@cluster0.nvujnf4.mongodb.net/?retryWrites=true&w=majority'
 server = ServerApi('1')
 # Create a new client and connect to the server
-mongo = MongoClient(uri)
+mongo = MongoClient(uri, server=server)
 fema_data = mongo['fema_data']
 tornados = fema_data['tornado_data']
 
