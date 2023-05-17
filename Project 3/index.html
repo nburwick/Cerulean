@@ -1,57 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Tornados Line Chart</title>
-	<!-- Include charting library -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"></script>
 </head>
 <body>
-	<!-- Create a canvas element for the chart -->
-	<canvas id="chart"></canvas>
+  <canvas id="lineChart"></canvas>
 
-	<script>
-		// Load the GeoJSON data
-		fetch("static/Resources/Tornado_Tracks.geojson")
-			.then(response => response.json())
-			.then(data => {
-				// Extract data for given year and state
-				const year = 2010; // replace with pull down year
-				const yearData = data.features.filter(feature => new Date(feature.properties.date).getFullYear() === year);
-        //const state = TX; // replace with pull down state
-        
+  <script>
+    // Assuming you have loaded the GeoJSON data into a variable called 'data'
+    var state = "st"; // Replace with your desired state
+    var year = "yr"; // Replace with your desired year
+    var month = "mo"; // Replace with your desired month
 
-				// Calculate sum for each month
-				const monthlySum = new Array(12).fill(0); // initialize array with zeros
-				yearData.forEach(feature => {
-					const month = new Date(feature.properties.date).getMonth();
-					monthlySum[month]++;
-				});
+    // Filter the data for the given state, year, and month
+    var filteredData = data.features.filter(function(feature) {
+      return (
+        feature.properties.State === state &&
+        feature.properties.Year === year &&
+        feature.properties.Month === month
+      );
+    });
 
-				// Create the chart
-				const chartCanvas = document.getElementById("chart");
-				new Chart(chartCanvas, {
-					type: "line",
-					data: {
-						labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-						datasets: [{
-							label: `${year} Tornado Totals`,
-							data: monthlySum,
-							borderColor: "blue",
-							fill: false
-						}]
-					},
-					options: {
-						scales: {
-							y: {
-								beginAtZero: true
-							}
-						}
-					}
-				});
-			});
-	</script>
+    // Calculate the sum of events for each month
+    var eventCounts = [];
+    for (var i = 1; i <= 12; i++) {
+      var count = filteredData.reduce(function(acc, feature) {
+        if (feature.properties.Month === i.toString()) {
+          return acc + feature.properties.Events.length;
+        }
+        return acc;
+      }, 0);
+      eventCounts.push(count);
+    }
+
+    // Create a line chart using Chart.js
+    var ctx = document.getElementById('lineChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        datasets: [{
+          label: 'Event Count',
+          data: eventCounts,
+          fill: false,
+          borderColor: 'blue',
+          tension: 0.1
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Month'
+            }
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Event Count'
+            }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
+
