@@ -1,15 +1,11 @@
-// Connect to Flask API
-
-function update_api(state){
-    let st = state || "TX"
-    var url = `http://localhost:8000/api/v1.0/${st}`
-    return url
-}
-
 // Create function to initialize map to be called later with API Data
-function initialize(){d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data){
-    createDrops(data.features);
-    createMap(data.features);
+async function initialize(){
+
+  update_api().then(function(d){
+    createDrops(d.features);
+    createMap(d.features);
+    fatalities();
+    linechart();
 });}
 
 // Create a function to map colors to features and legend related to Magnitude (mag)
@@ -214,11 +210,11 @@ function optionChanged(){
     
 
 
-    d3.json("https://raw.githubusercontent.com/nburwick/Cerulean/main/static/Resources/Tornado_Tracks.geojson").then(function(data){
-      var tornados = data.features
+    
+      var tornados = dataGlobal.features
       if(state != "all"){tornados = tornados.filter(feature => feature.properties.st == state)}
       createMap(tornados, year)
-    })
+    
 }
 
 // render first view of map

@@ -41,6 +41,14 @@
           <div class="col-md-12 jumbotron text-center">
             <h1>US Tornadoes 1950-2022</h1>
             <p>Use the interactive charts below to explore the dataset<br></p>
+            <label for="states">Select State: </label>
+    <select id="states" onchange="optionChanged(); handleDropdownChange(); linechart();">
+        <option value="all">All States</option>
+    </select>
+    <label for="years">Select Year: </label>
+    <select id="years" onchange="optionChanged(); linechart();">
+        <option value="0">1950-2022</option>
+    </select>
             <p></p>
           </div>
         </div>
@@ -58,14 +66,11 @@
           <div class="chart-wrapper">
             <h3>Seasonal Line Chart by Year</h3>
             <p></p>
-            <label for="yearLine">Select Year for Line Chart: </label>
-            <select name="yearLine" id="yearLine" class="year" onchange={pickYear()} onload="plotGraph(tornadoStats, 1950)"></select>
+            <p></p>
           </div>
             <hr>
           </div>
           <div id="barcharts" class="chart-container" onload="handleDropdownChange()"></div>
-          <!-- <div id="chartMagnitude" class="chart-container"></div>
-          <div id="chart1950to1995" class="chart-container"></div> -->
           <script>
             // Hide all charts except the first one
             var chartContainers = document.getElementById("barcharts");
@@ -87,14 +92,6 @@
   <!-- The div that holds our map -->
     <h3>GeoMap of US Tornadoes</h3>
     <p></p>
-    <label for="states">Select State: </label>
-    <select id="states" onchange="optionChanged(); handleDropdownChange(); linechart();">
-        <option value="all">All States</option>
-    </select>
-    <label for="years">Select Year: </label>
-    <select id="years" onchange="optionChanged()">
-        <option value="0">1950-2022</option>
-    </select>
     <hr>
     <div id="map"></div>
 
@@ -104,6 +101,7 @@
   <script type="text/javascript" src="static/js/pipeline.js"></script>
   <script type="text/javascript" src="static/js/barcharts.js"></script>
   <script type="text/javascript" src="static/js/lineChart.js"></script>
+  <script type="text/javascript" src="static/js/main.js"></script>
   
 </body>
 

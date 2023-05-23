@@ -1,12 +1,11 @@
 // Load the GeoJSON file
 function fatalities(){
   var state = document.getElementById('states').value
-  d3.json(update_api(state)).then(function(data) {
   // Extract the features from the GeoJSON data
   
 
-  var features = data.features;
-  // if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
+  var features = dataGlobal.features;
+  if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
 
   // Group the features by year and calculate the sum of fatalities for each year
   var fatalitiesData = d3.rollups(
@@ -62,18 +61,18 @@ function fatalities(){
   
   // Plot the Fatalities bar chart
   Plotly.newPlot("barcharts", dataFatalities, layoutFatalities);
-})};
+};
 
 
 // Load the geoJSON file
-function magnitude(state){
+function magnitude(){
   // Extract the properties from the geoJSON features
   var state = document.getElementById('states').value
-  d3.json(update_api(state)).then(function(data) {
+  
   // Extract the properties from the geoJSON features
 
-  var features = data.features;
-  // if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
+  var features = dataGlobal.features;
+  if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
 
   // Extract the years and magnitudes from the features
   var years = features.map(function(feature) {
@@ -153,17 +152,17 @@ function magnitude(state){
   };
 
   Plotly.newPlot('barcharts', data, layout);
-})};
+};
 
 
 // Load the geoJSON file
-function propertyLoss(state){
+function propertyLoss(){
   var state = document.getElementById('states').value
-  d3.json(update_api(state)).then(function(data) {
+  
     // Extract the properties from the geoJSON features
 
-    var features = data.features;
-    // if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
+    var features = dataGlobal.features;
+    if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
   
     // Categorize the property loss values
     features.forEach(function(feature) {
@@ -325,6 +324,5 @@ var layout = {
 };
 
 Plotly.newPlot("barcharts", data, layout);
-})
 }
-fatalities();
+

@@ -38,23 +38,23 @@ function createStats(){
             function linechart(){
                 createStats()
                 var state = document.getElementById('states').value
-                d3.json(update_api(state))
-            .then(function(response) {
-                
-
+                var features = dataGlobal.features;
+                if(state != "all"){features = features.filter(feature => feature.properties.st == state)}
+            
                 // console.log("Response: ", response)
-               processData(response)
+               processData(features)
                pickYear()
-            })}
+            }
 
             function pickYear() {
-                var year = document.getElementById("yearLine").value;
+                var year = document.getElementById("years").value;
+                if(year == 0){year = 2022}
                 plotGraph(tornadoStats, year)
             }
 
             async function processData(data) {
                 // console.log("Features: ", data["features"])
-                data["features"].forEach(feature => {
+                data.forEach(feature => {
                     var year = feature["properties"]["yr"]
                     var month = feature["properties"]["mo"]
                     aggregateData(tornadoStats, year, month)
@@ -129,4 +129,4 @@ function createStats(){
                     
                 }
             }
-            linechart();
+            
